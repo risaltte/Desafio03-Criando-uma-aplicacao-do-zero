@@ -7,11 +7,13 @@ export interface PrismicConfig {
 }
 
 export function getPrismicClient(config: PrismicConfig): prismic.Client {
-  const client = prismic.createClient(process.env.PRISMIC_API_ENDPOINT);
+  const client = prismic.createClient(process.env.PRISMIC_API_ENDPOINT, {
+    accessToken: process.env.PRISMIC_ACCESS_TOKEN
+  });
 
   enableAutoPreviews({
     client,
-    req: config.req,
+    req: config.req
   })
 
   return client;
