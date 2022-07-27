@@ -1,5 +1,6 @@
 import { GetStaticProps } from 'next';
 import { getPrismicClient } from '../services/prismic';
+import Head from 'next/head';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 
@@ -32,7 +33,7 @@ interface HomeProps {
   postsPagination: PostPagination;
 }
 
-export default function Home({ postsPagination }: HomeProps) {
+export default function Home({ postsPagination }: HomeProps): JSX.Element  {
   const { results, next_page } = postsPagination;
 
   const formattedPosts = results.map(post => {
@@ -61,27 +62,33 @@ export default function Home({ postsPagination }: HomeProps) {
   }
 
   return (
-    <main className={styles.container}>
-      <div className={styles.content}>
-        {
-          posts.map(post => (
-            <Link key={post.uid} href={`/post/${post.uid}`}>
-              <a>
-                <strong>{post.data.title}</strong>
-                <p>{post.data.subtitle}</p>
-                <div>
-                  <div><FiCalendar /><span>{post.first_publication_date}</span></div>
-                  <div><FiUser /><span>{post.data.author}</span></div>
-                </div>
-              </a>
-            </Link>
-          ))
-        }
+    <>
+      <Head>
+        <title>Spacetraveling - Listagem de posts</title>
+      </Head>
 
-        <LoadMorePostsButton nextPage={nextPage} onLoadMorePosts={onLoadMorePosts}/>
-      </div>
+      <main className={styles.container}>
+        <div className={styles.content}>
+          {
+            posts.map(post => (
+              <Link key={post.uid} href={`/post/${post.uid}`}>
+                <a>
+                  <strong>{post.data.title}</strong>
+                  <p>{post.data.subtitle}</p>
+                  <div>
+                    <div><FiCalendar /><span>{post.first_publication_date}</span></div>
+                    <div><FiUser /><span>{post.data.author}</span></div>
+                  </div>
+                </a>
+              </Link>
+            ))
+          }
 
-    </main>
+          <LoadMorePostsButton nextPage={nextPage} onLoadMorePosts={onLoadMorePosts}/>
+        </div>
+
+      </main>
+    </>
   );
 }
 
@@ -94,9 +101,11 @@ export const getStaticProps:GetStaticProps = async () => {
     pageSize: 1
   });
 
+  // console.log(postsResponse);
+
   const posts = postsResponse.results.map(post => {
     return {
-      slug: post.uid,
+      uid: post.uid,
       first_publication_date: post.first_publication_date,
       data: {
         title: post.data.title,
@@ -105,6 +114,8 @@ export const getStaticProps:GetStaticProps = async () => {
       }
     }
   });
+
+  console.log(posts);
 
   const next_page = postsResponse.next_page;
 

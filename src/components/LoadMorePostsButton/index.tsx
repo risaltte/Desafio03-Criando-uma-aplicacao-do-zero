@@ -31,7 +31,7 @@ export default function LoadMorePostsButton({ nextPage, onLoadMorePosts }: LoadM
 
     const formattedPosts = posts.results.map(post => {
       return {
-        slug: post.uid,
+        uid: post.uid,
         first_publication_date: format(
           new Date(post.first_publication_date),
           'dd MMM yyyy',
