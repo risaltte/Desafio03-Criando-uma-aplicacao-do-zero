@@ -13,6 +13,7 @@ import { FiUser } from 'react-icons/fi';
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 import { useState } from 'react';
+import Header from '../components/Header';
 
 interface Post {
   uid?: string;
@@ -67,6 +68,8 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element  {
         <title>Spacetraveling - Listagem de posts</title>
       </Head>
 
+      <Header />
+
       <main className={styles.container}>
         <div className={styles.content}>
           {
@@ -100,8 +103,6 @@ export const getStaticProps:GetStaticProps = async () => {
     fetch: ['post.title', 'post.subtitle', 'post.author'],
     pageSize: 1
   });
-
-  // console.log(postsResponse);
 
   const posts = postsResponse.results.map(post => {
     return {
